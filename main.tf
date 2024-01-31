@@ -17,6 +17,7 @@ resource "docker_container" "docker_container_instance" {
   privileged = var.privileged
   restart    = var.restart
   entrypoint = var.entrypoint
+  command    = var.command
 
   dynamic "networks_advanced" {
     for_each = var.networks_advanced
