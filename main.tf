@@ -1,5 +1,5 @@
 locals {
-  files = flatten(tolist([for d in var.mount_dirs : [for f in fileset(d, "**") : {
+  upload_files = flatten(tolist([for d in var.upload_dirs : [for f in fileset(d, "**") : {
     source = "${d}/${f}"
     target = "/${f}"
     }
@@ -16,19 +16,47 @@ resource "docker_container" "docker_container_instance" {
   tty        = var.tty
   privileged = var.privileged
   restart    = var.restart
+  entrypoint = var.entrypoint
 
   dynamic "networks_advanced" {
-    for_each = var.networks
+    for_each = var.networks_advanced
     content {
-      name         = networks_advanced.name
-      ipv4_address = networks_advanced.ipv4_address
+      aliases      = networks_advanced.value.aliases
+      name         = networks_advanced.value.name
+      ipv4_address = networks_advanced.value.ipv4_address
     }
   }
   dynamic "upload" {
-    for_each = local.files
+    for_each = local.upload_files
     content {
-      source = upload.source
-      file   = upload.target
+      source = upload.value.source
+      file   = upload.value.target
+    }
+  }
+
+  dynamic "mounts" {
+    for_each = var.mounts
+    content {
+      target = mounts.value.target
+      source = mounts.value.source
+      type   = mounts.value.type
+      dynamic "bind_options" {
+        for_each = mounts.value.bind_options == null ? [] : [1]
+        content {
+          propagation = mounts.value.bind_options.propagation
+        }
+      }
+    }
+  }
+
+  dynamic "volumes" {
+    for_each = var.volumes
+    content {
+      container_path = volumes.value.container_path
+      from_container = volumes.value.from_container
+      host_path      = volumes.value.host_path
+      read_only      = volumes.value.read_only
+      volume_name    = volumes.value.volume_name
     }
   }
 }
