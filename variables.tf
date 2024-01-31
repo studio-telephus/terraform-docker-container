@@ -26,6 +26,11 @@ variable "command" {
   default = null
 }
 
+variable "hostname" {
+  type    = string
+  default = null
+}
+
 variable "networks_advanced" {
   description = "Docker networks to join."
   type = list(object({

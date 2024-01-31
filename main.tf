@@ -18,6 +18,7 @@ resource "docker_container" "docker_container_instance" {
   restart    = var.restart
   entrypoint = var.entrypoint
   command    = var.command
+  hostname   = var.hostname
 
   dynamic "networks_advanced" {
     for_each = var.networks_advanced
@@ -67,6 +68,7 @@ resource "terraform_data" "local_exec_condition" {
   provisioner "local-exec" {
     when        = create
     command     = <<-EXEC
+      docker run ${var.name} /bin/bash
       docker exec ${var.name} /bin/bash -xe -c 'chmod +x ${var.exec} && ${var.exec}'
     EXEC
     interpreter = var.local_exec_interpreter
