@@ -55,9 +55,9 @@ variable "mounts" {
 
 variable "volumes" {
   type = list(object({
-    container_path = string
+    container_path = optional(string)
     from_container = optional(string)
-    host_path      = string
+    host_path      = optional(string)
     read_only      = optional(bool, false)
     volume_name    = optional(string)
   }))
