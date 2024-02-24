@@ -63,15 +63,24 @@ resource "docker_container" "docker_container_instance" {
   }
 }
 
+resource "time_sleep" "wait_for_container_instance" {
+  depends_on = [
+    docker_container.docker_container_instance
+  ]
+  create_duration = "5s"
+}
+
 resource "terraform_data" "local_exec_condition" {
   count = var.exec_enabled ? 1 : 0
   provisioner "local-exec" {
     when        = create
     command     = <<-EXEC
       docker run ${var.name} /bin/bash
+      sleep 3s
       docker exec ${var.name} /bin/bash -xe -c 'chmod +x ${var.exec} && ${var.exec}'
     EXEC
     interpreter = var.local_exec_interpreter
   }
-  depends_on = [docker_container.docker_container_instance]
+  depends_on = [time_sleep.wait_for_container_instance]
 }
+
