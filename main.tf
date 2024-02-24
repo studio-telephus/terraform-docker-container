@@ -19,6 +19,7 @@ resource "docker_container" "docker_container_instance" {
   entrypoint = var.entrypoint
   command    = var.command
   hostname   = var.hostname
+  shm_size   = var.shm_size
 
   dynamic "networks_advanced" {
     for_each = var.networks_advanced
