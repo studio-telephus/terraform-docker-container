@@ -18,7 +18,7 @@ variable "privileged" {
 
 variable "entrypoint" {
   type    = list(string)
-  default = []
+  default = null
 }
 
 variable "command" {
