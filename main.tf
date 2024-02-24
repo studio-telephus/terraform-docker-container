@@ -10,16 +10,17 @@ locals {
 }
 
 resource "docker_container" "docker_container_instance" {
-  name       = var.name
-  image      = var.image
-  env        = local.environment
-  tty        = var.tty
-  privileged = var.privileged
-  restart    = var.restart
-  entrypoint = var.entrypoint
-  command    = var.command
-  hostname   = var.hostname
-  shm_size   = var.shm_size
+  name          = var.name
+  image         = var.image
+  env           = local.environment
+  tty           = var.tty
+  privileged    = var.privileged
+  restart       = var.restart
+  entrypoint    = var.entrypoint
+  command       = var.command
+  hostname      = var.hostname
+  shm_size      = var.shm_size
+  cgroupns_mode = var.cgroupns_mode
 
   dynamic "networks_advanced" {
     for_each = var.networks_advanced

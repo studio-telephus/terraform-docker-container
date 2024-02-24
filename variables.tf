@@ -36,6 +36,11 @@ variable "shm_size" {
   default = null
 }
 
+variable "cgroupns_mode" {
+  type    = string
+  default = null
+}
+
 variable "networks_advanced" {
   description = "Docker networks to join."
   type = list(object({
